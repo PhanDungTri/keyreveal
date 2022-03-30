@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Giveaway {
+  id          String   @id
+  title       String
+  description String?
+  type        Int      @default(0)
+  public      Boolean  @default(true)
+  ended       Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  keys        Key[]
+
+  @@map("giveaway")
+}
+
+model Key {
+  key        String   @id
+  name       String
+  url        String?
+  status     Int      @default(0)
+  giveaway   Giveaway @relation(fields: [giveawayId], references: [id])
+  giveawayId String   @map("giveaway_id")
+
+  @@map("keys")
+}
