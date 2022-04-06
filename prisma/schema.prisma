@@ -16,6 +16,7 @@ model Giveaway {
   description String?
   type        Int      @default(0)
   public      Boolean  @default(true)
+  password    String?
   ended       Boolean  @default(false)
   createdAt   DateTime @default(now()) @map(name: "created_at")
   keys        Key[]
@@ -24,12 +25,14 @@ model Giveaway {
 }
 
 model Key {
-  key        String   @id
+  index      Int
+  key        String
   name       String
   url        String?
   status     Int      @default(0)
   giveaway   Giveaway @relation(fields: [giveawayId], references: [id])
   giveawayId String   @map("giveaway_id")
 
+  @@id([index, key, giveawayId])
   @@map("keys")
 }

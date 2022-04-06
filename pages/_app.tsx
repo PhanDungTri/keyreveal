@@ -3,6 +3,7 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
+import "../styles/globals.css";
 
 export default function App(props: AppProps) {
 	const { Component, pageProps } = props;
