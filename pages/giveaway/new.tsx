@@ -4,13 +4,15 @@ import { useModals } from "@mantine/modals";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import axios from "axios";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { CreateGiveawayForm, GiveawaySubmitPanel } from "../../features";
-import { NewGiveaway } from "../../models";
+import { NewGiveaway, NewGiveawayResponse } from "../../models";
 
 const NewGiveAwayPage: NextPage = () => {
 	const modals = useModals();
+	const router = useRouter();
 	const [pub, setPub] = useState(true);
 	const [posting, setPosting] = useState(false);
 
@@ -32,9 +34,11 @@ const NewGiveAwayPage: NextPage = () => {
 		});
 
 		try {
-			const { data } = await axios.post("/api/giveaway", { ...payload, captchaToken });
+			const {
+				data: { id },
+			} = await axios.post<NewGiveawayResponse>("/api/giveaway", { ...payload, captchaToken });
 
-			console.log(data);
+			await router.push(`/giveaway/${id}`);
 
 			updateNotification({
 				id: "create-giveaway",
@@ -44,6 +48,8 @@ const NewGiveAwayPage: NextPage = () => {
 				icon: <Icon icon="bx:check" />,
 			});
 		} catch (e) {
+			setPosting(false);
+
 			if (axios.isAxiosError(e)) {
 				updateNotification({
 					id: "create-giveaway",
@@ -53,8 +59,6 @@ const NewGiveAwayPage: NextPage = () => {
 					icon: <Icon icon="bx:x" />,
 				});
 			}
-		} finally {
-			setPosting(false);
 		}
 	};
 
