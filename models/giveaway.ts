@@ -113,3 +113,18 @@ export const NewGiveawaySchema = z
 export type NewKey = z.infer<typeof NewKeySchema>;
 
 export type NewGiveaway = z.infer<typeof NewGiveawaySchema>;
+
+export type NewGiveawayResponse = {
+	id: string;
+};
+
+export type GetGiveaway = {
+	id: string;
+	title: string;
+	description: string | null;
+	keys: {
+		index: string;
+		name: string;
+		url: string;
+	}[];
+};
