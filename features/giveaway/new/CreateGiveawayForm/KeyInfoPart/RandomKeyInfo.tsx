@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { Text, Textarea } from "@mantine/core";
 import { ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
-import { NewKey } from "../../../models";
+import { NewKey } from "../../../../../models";
 
 type Props = {
 	onChange: (keys: NewKey[]) => void;

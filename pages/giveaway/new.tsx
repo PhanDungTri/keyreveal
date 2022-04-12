@@ -1,18 +1,18 @@
 import { Icon } from "@iconify/react";
-import { Card, Center, Container, Group, MediaQuery, Title } from "@mantine/core";
-import { useModals } from "@mantine/modals";
+import { Card, Container, Group, MediaQuery, Stack, Title } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import axios from "axios";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { Media } from "../../components";
 import { CreateGiveawayForm, GiveawaySubmitPanel } from "../../features";
+import { useCaptchaModal } from "../../hooks";
 import { NewGiveaway, NewGiveawayResponse } from "../../models";
 
 const NewGiveAwayPage: NextPage = () => {
-	const modals = useModals();
 	const router = useRouter();
+	const openCaptchaModal = useCaptchaModal();
 	const [pub, setPub] = useState(true);
 	const [posting, setPosting] = useState(false);
 
@@ -21,13 +21,12 @@ const NewGiveAwayPage: NextPage = () => {
 	const postNewGiveaway = (payload: NewGiveaway) => async (captchaToken: string | null) => {
 		if (!captchaToken) return;
 
-		setTimeout(() => modals.closeAll(), 1000);
 		setPosting(true);
 
 		showNotification({
 			id: "create-giveaway",
 			loading: true,
-			title: "Creating giveaway...",
+			title: "Creating giveaway",
 			message: "We are preparing the party. Please wait a bit.",
 			autoClose: false,
 			disallowClose: true,
@@ -44,8 +43,9 @@ const NewGiveAwayPage: NextPage = () => {
 				id: "create-giveaway",
 				color: "green",
 				title: "Successfully created giveaway",
-				message: "The party is ready! Share this giveaway with your friends!",
+				message: "The party is ready! Share it with your friends!",
 				icon: <Icon icon="bx:check" />,
+				autoClose: 3000,
 			});
 		} catch (e) {
 			setPosting(false);
@@ -62,35 +62,28 @@ const NewGiveAwayPage: NextPage = () => {
 		}
 	};
 
-	const handleSave = async (payload: Omit<NewGiveaway, "public">) => {
-		modals.openModal({
-			title: "Before continuing...",
-			children: (
-				<Center>
-					<ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""} onChange={postNewGiveaway({ ...payload, public: pub })} />
-				</Center>
-			),
-		});
-	};
+	const handleSave = async (payload: Omit<NewGiveaway, "public">) => openCaptchaModal(postNewGiveaway({ ...payload, public: pub }));
 
 	return (
 		<Container size="lg" py="md">
-			<Card mb="xs">
-				<Group position="apart" noWrap>
-					<Title order={3}>
-						Hold a new giveaway <Icon icon="bxs:gift" inline />
-					</Title>
-					<MediaQuery query="(max-width: 767px)" styles={{ display: "none" }}>
-						<GiveawaySubmitPanel isWideScreen posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
-					</MediaQuery>
-				</Group>
-			</Card>
-			<CreateGiveawayForm onSubmit={handleSave} />
-			<MediaQuery query="(min-width: 768px)" styles={{ display: "none" }}>
-				<Card mt="xs">
-					<GiveawaySubmitPanel posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+			<Stack spacing="xs">
+				<Card>
+					<Group position="apart" noWrap>
+						<Title order={3}>
+							Hold a new giveaway <Icon icon="bxs:gift" inline />
+						</Title>
+						<Media greaterThanOrEqual="md">
+							<GiveawaySubmitPanel isWideScreen posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+						</Media>
+					</Group>
 				</Card>
-			</MediaQuery>
+				<CreateGiveawayForm onSubmit={handleSave} />
+				<Media lessThan="md">
+					<Card>
+						<GiveawaySubmitPanel posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+					</Card>
+				</Media>
+			</Stack>
 		</Container>
 	);
 };

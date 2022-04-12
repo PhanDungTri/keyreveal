@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Stack, Title, TextInput, ActionIcon } from "@mantine/core";
+import { Stack, Title, TextInput, ActionIcon, createStyles } from "@mantine/core";
 import { useFormContext } from "react-hook-form";
 
 type Props = {
@@ -7,22 +7,29 @@ type Props = {
 	onRemove: () => void;
 };
 
+const useStyles = createStyles(({ colors, spacing }) => ({
+	wrapper: {
+		border: `1px dashed ${colors.dark[4]}`,
+		padding: spacing.xs,
+		position: "relative",
+	},
+	removeIcon: {
+		position: "absolute",
+		right: 0,
+		top: 0,
+	},
+}));
+
 export const NormalKeyInfo = ({ index, onRemove }: Props): JSX.Element => {
 	const {
 		register,
 		formState: { errors },
 	} = useFormContext();
 
+	const { classes } = useStyles();
+
 	return (
-		<Stack
-			align="unset"
-			spacing="xs"
-			sx={({ colors, spacing }) => ({
-				border: `1px dashed ${colors.dark[4]}`,
-				padding: spacing.xs,
-				position: "relative",
-			})}
-		>
+		<Stack align="unset" spacing="xs" className={classes.wrapper}>
 			<Title order={6}>Key &bull; {index + 1}</Title>
 			<TextInput
 				variant="default"
@@ -50,17 +57,7 @@ export const NormalKeyInfo = ({ index, onRemove }: Props): JSX.Element => {
 				{...register(`keys.${index}.url`)}
 			/>
 			{index !== 0 && (
-				<ActionIcon
-					sx={{
-						position: "absolute",
-						right: 0,
-						top: 0,
-					}}
-					variant="transparent"
-					size="lg"
-					color="red"
-					onClick={onRemove}
-				>
+				<ActionIcon className={classes.removeIcon} variant="transparent" size="lg" color="red" onClick={onRemove}>
 					<Icon icon="bx:x" />
 				</ActionIcon>
 			)}

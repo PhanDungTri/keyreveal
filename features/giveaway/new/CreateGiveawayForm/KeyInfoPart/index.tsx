@@ -1,14 +1,15 @@
 import { Icon } from "@iconify/react";
 import { Button, SimpleGrid, Tabs, Text } from "@mantine/core";
+import { GiveawayType } from "@prisma/client";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { GiveawayType, NewKey } from "../../../models";
+import { NewKey } from "../../../../../models";
 import { NormalKeyInfo } from "./NormalKeyInfo";
 import { RandomKeyInfo } from "./RandomKeyInfo";
 
 type Props = {
 	type: GiveawayType;
-	onChangeType: (type: GiveawayType) => void;
+	onChangeType: (index: number) => void;
 };
 
 export const KeyInfoPart = ({ type, onChangeType }: Props): JSX.Element => {
@@ -33,11 +34,11 @@ export const KeyInfoPart = ({ type, onChangeType }: Props): JSX.Element => {
 	}, [type]);
 
 	return (
-		<Tabs initialTab={type} onTabChange={onChangeType} grow>
+		<Tabs onTabChange={onChangeType} grow>
 			<Tabs.Tab label="Normal">
-				{errors.listSize?.message && (
+				{errors.listSize?.message(
 					<Text p="sm" size="sm" color="red">
-						Error
+						{errors.listSize.message}
 					</Text>
 				)}
 				<SimpleGrid

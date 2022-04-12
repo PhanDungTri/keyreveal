@@ -1,13 +1,14 @@
 import { NextApiHandler } from "next";
 import { ZodError } from "zod";
-import { BadRequest, BadRequestType, NewGiveaway, NewGiveawaySchema, WithCaptchaToken } from "../../models";
-import { createGiveaway, verifyCaptcha } from "../../services";
+import { HttpMethod } from "../../../constants";
+import { BadRequest, BadRequestType, NewGiveaway, NewGiveawaySchema, WithCaptchaToken } from "../../../models";
+import { createGiveaway, verifyCaptcha } from "../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
 
 	switch (method) {
-		case "POST": {
+		case HttpMethod.POST: {
 			const { captchaToken, ...newGiveaway }: WithCaptchaToken<NewGiveaway> = req.body;
 
 			try {
