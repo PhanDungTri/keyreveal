@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Card, Text } from "@mantine/core";
+import { GiveawayType } from "@prisma/client";
 import { memo } from "react";
-import { GiveawayType } from "../../models";
 
 type Props = {
 	type: GiveawayType;

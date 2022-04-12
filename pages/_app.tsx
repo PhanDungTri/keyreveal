@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 import "../styles/globals.css";
+import { MediaProvider } from "../components";
 
 export default function App(props: AppProps) {
 	const { Component, pageProps } = props;
@@ -15,20 +16,22 @@ export default function App(props: AppProps) {
 				<meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
 			</Head>
 
-			<MantineProvider
-				withGlobalStyles
-				withNormalizeCSS
-				theme={{
-					colorScheme: "dark",
-					primaryColor: "yellow",
-				}}
-			>
-				<ModalsProvider>
-					<NotificationsProvider>
-						<Component {...pageProps} />
-					</NotificationsProvider>
-				</ModalsProvider>
-			</MantineProvider>
+			<MediaProvider>
+				<MantineProvider
+					withGlobalStyles
+					withNormalizeCSS
+					theme={{
+						colorScheme: "dark",
+						primaryColor: "yellow",
+					}}
+				>
+					<ModalsProvider>
+						<NotificationsProvider>
+							<Component {...pageProps} />
+						</NotificationsProvider>
+					</ModalsProvider>
+				</MantineProvider>
+			</MediaProvider>
 		</>
 	);
 }

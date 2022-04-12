@@ -1,10 +1,6 @@
+import { GiveawayType, KeyStatus } from "@prisma/client";
 import { z } from "zod";
 import { createInvalidTypeErrorMessage, createLengthErrorMessage, createRequiredErrorMessage, createSizeErrorMessage } from "../utils";
-
-export enum GiveawayType {
-	Normal = 0,
-	Random = 1,
-}
 
 const TextLength = {
 	Key: { Min: 4, Max: 40 },
@@ -18,7 +14,10 @@ const TextLength = {
 const ListSize = {
 	Key: {
 		Min: 1,
-		Max: [100, 1000],
+		Max: {
+			Normal: 100,
+			Random: 1000,
+		},
 	},
 };
 
@@ -100,10 +99,7 @@ export const NewGiveawaySchema = z
 		}),
 	})
 	.refine(
-		(data) => {
-			if (data.type === GiveawayType.Random) return data.keys.length <= ListSize.Key.Max[1];
-			return data.keys.length <= ListSize.Key.Max[0];
-		},
+		(data) => data.keys.length <= ListSize.Key.Max[data.type],
 		(data) => ({
 			message: createSizeErrorMessage("key", ListSize.Key.Max[data.type], "max"),
 			path: ["listSize"],
@@ -113,3 +109,38 @@ export const NewGiveawaySchema = z
 export type NewKey = z.infer<typeof NewKeySchema>;
 
 export type NewGiveaway = z.infer<typeof NewGiveawaySchema>;
+
+export type NewGiveawayResponse = {
+	id: string;
+};
+
+export type GetKey = {
+	index: number;
+	name: string;
+	url: string;
+	status: KeyStatus;
+};
+
+export type GetGiveaway = {
+	id: string;
+	title: string;
+	description: string | null;
+	createdAt: Date;
+	public: boolean;
+	locked: boolean;
+	keys: GetKey[];
+};
+
+export type GetKeyForReveal = {
+	key: string;
+};
+
+export type LocalStorageViewedKey = {
+	[giveawayId: string]: {
+		[index: number]: {
+			key: string;
+			name: string;
+			date: string;
+		};
+	};
+};

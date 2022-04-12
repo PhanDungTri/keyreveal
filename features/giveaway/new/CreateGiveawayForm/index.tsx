@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card } from "@mantine/core";
+import { GiveawayType } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { GiveawayType, NewGiveaway, NewGiveawaySchema } from "../../models";
-import { generateRandomName } from "../../utils";
+import { NewGiveaway, NewGiveawaySchema } from "../../../../models";
+import { generateRandomName } from "../../../../utils";
 import { GeneralInfoPart } from "./GeneralInfoPart";
 import { GiveawayTypeDescription } from "./GiveawayTypeDescription";
 import { KeyInfoPart } from "./KeyInfoPart";
@@ -26,21 +27,24 @@ export const CreateGiveawayForm = ({ onSubmit }: Props): JSX.Element => {
 		},
 	});
 
-	console.log(form.formState.errors);
+	const changeType = (index: number) => {
+		const mappedGiveawayType = Object.values(GiveawayType);
+		setType(mappedGiveawayType[index]);
+	};
 
 	useEffect(() => {
 		form.register("public");
 	}, []);
 
 	return (
-		<form id="new-giveaway-form" onSubmit={form.handleSubmit(onSubmit)}>
+		<form id="new-giveaway-form" onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}>
 			<FormProvider {...form}>
 				<Card mb="xs">
 					<GeneralInfoPart />
 				</Card>
 				<GiveawayTypeDescription type={type} />
 				<Card>
-					<KeyInfoPart type={type} onChangeType={setType} />
+					<KeyInfoPart type={type} onChangeType={changeType} />
 				</Card>
 			</FormProvider>
 		</form>
