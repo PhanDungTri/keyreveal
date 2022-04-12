@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Alert, Badge, Button, Card, Center, Container, createStyles, Group, SimpleGrid, Stack, Text, TextInput, Title } from "@mantine/core";
+import { Alert, Badge, Card, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { KeyStatus } from "@prisma/client";
 import axios from "axios";
@@ -7,10 +7,11 @@ import dayjs from "dayjs";
 import produce from "immer";
 import { useAtom } from "jotai";
 import { GetServerSideProps, NextPage } from "next";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { viewedKeysAtom } from "../../atom";
 import { GetKeyCooldown } from "../../constants";
 import { KeySpoiler } from "../../features";
+import { LockedCard } from "../../features/giveaway/[id]/LockedCard";
 import { useIsMounted } from "../../hooks";
 import { GetGiveaway, GetKey, GetKeyForReveal } from "../../models";
 import { getGiveaway } from "../../services";
@@ -41,19 +42,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	};
 };
 
-const useStyles = createStyles(({ colors }) => ({
-	lockedCard: {
-		backgroundColor: "inherit",
-		border: `2px dashed ${colors.dark[4]}`,
-	},
-}));
-
 const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 	const isMounted = useIsMounted();
-	const { classes } = useStyles();
 	const [giveaway, setGiveaway] = useState(ga);
 	const [inCooldown, setInCooldown] = useState(false);
-	const [unlocking, setUnlocking] = useState(false);
 	const [viewedKeys, setViewedKeys] = useAtom(viewedKeysAtom);
 	const keys = viewedKeys[ga.id] || {};
 	const cooldownTimeout = useRef<number>();
@@ -83,60 +75,14 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 		}
 	};
 
-	const unlock = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const unlock = async (password: string) => {
+		const { data: keys } = await axios.post<GetKey[]>(`/api/giveaway/${giveaway.id}/unlock`, { password });
 
-		const fd = new FormData(e.currentTarget);
-		const password = fd.get("password") as string;
-
-		if (!password)
-			showNotification({
-				title: "Cannot unlock giveaway",
-				message: "Password is required",
-				color: "red",
-				icon: <Icon icon="bx:x" />,
-			});
-		else {
-			setUnlocking(true);
-
-			showNotification({
-				id: "unlock-giveaway",
-				loading: true,
-				title: "Unlocking giveaway",
-				message: "Please wait a bit, we're retrieving g-pass for you!",
-				autoClose: false,
-				disallowClose: true,
-			});
-
-			try {
-				const { data: keys } = await axios.post<GetKey[]>(`/api/giveaway/${giveaway.id}/unlock`, { password });
-
-				setGiveaway({
-					...giveaway,
-					locked: false,
-					keys,
-				});
-
-				updateNotification({
-					id: "unlock-giveaway",
-					color: "green",
-					title: "Giveaway unlocked",
-					message: "Please enjoy the giveaway!",
-					icon: <Icon icon="bx:check" />,
-				});
-			} catch (e) {
-				if (axios.isAxiosError(e))
-					updateNotification({
-						id: "unlock-giveaway",
-						color: "red",
-						title: "Cannot unlock giveaway",
-						message: e.response?.data.message,
-						icon: <Icon icon="bx:x" />,
-					});
-			} finally {
-				setUnlocking(false);
-			}
-		}
+		setGiveaway({
+			...giveaway,
+			locked: false,
+			keys,
+		});
 	};
 
 	const updateStatus = (index: number) => async (status: KeyStatus) => {
@@ -198,10 +144,6 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 		[]
 	);
 
-	useEffect(() => {
-		document.getElementById("hello");
-	}, []);
-
 	return (
 		<Container>
 			<Stack spacing="xs">
@@ -239,24 +181,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					<Text size="sm">{giveaway.description ? giveaway.description : "Enjoy the party!"}</Text>
 				</Card>
 				{giveaway.locked ? (
-					<Card className={classes.lockedCard}>
-						<Text align="center" size="md" color="dimmed" mt="xs" weight={500}>
-							<Stack align="center" spacing={0}>
-								<Icon icon="bxs:lock-alt" width={48} />
-								This giveaway is locked.
-							</Stack>
-						</Text>
-						<form onSubmit={unlock}>
-							<Center mt="md">
-								<Stack spacing="xs">
-									<TextInput name="password" size="xs" type="password" placeholder="Password" />
-									<Button type="submit" loading={unlocking} size="xs" compact>
-										Unlock
-									</Button>
-								</Stack>
-							</Center>
-						</form>
-					</Card>
+					<LockedCard onUnlock={unlock} />
 				) : (
 					isMounted && (
 						<Card>
