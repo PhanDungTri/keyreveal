@@ -39,7 +39,7 @@ export const RandomPuller = ({ keys, onPull, onReport }: Props): JSX.Element => 
 	const requestRandomKey = async (captchaToken: string | null) => {
 		try {
 			const key = await onPull(captchaToken);
-			console.log(key);
+
 			setPulledKey(key);
 		} catch (e) {
 			if (axios.isAxiosError(e)) {
