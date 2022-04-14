@@ -124,6 +124,7 @@ export type GetKey = {
 export type GetGiveaway = {
 	id: string;
 	title: string;
+	type: GiveawayType;
 	description: string | null;
 	createdAt: Date;
 	public: boolean;
@@ -143,4 +144,10 @@ export type LocalStorageViewedKey = {
 			date: string;
 		};
 	};
+};
+
+export type GetRandomKey = {
+	key: string;
+	index: number;
+	status: KeyStatus;
 };

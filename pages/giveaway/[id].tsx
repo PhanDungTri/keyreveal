@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Alert, Badge, Card, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { KeyStatus } from "@prisma/client";
+import { GiveawayType, KeyStatus } from "@prisma/client";
 import axios from "axios";
 import dayjs from "dayjs";
 import produce from "immer";
@@ -10,10 +10,10 @@ import { GetServerSideProps, NextPage } from "next";
 import { useEffect, useRef, useState } from "react";
 import { viewedKeysAtom } from "../../atom";
 import { GetKeyCooldown } from "../../constants";
-import { KeySpoiler } from "../../features";
-import { LockedCard } from "../../features/giveaway/[id]/LockedCard";
+import { KeySpoiler, LockedCard, RandomPuller } from "../../features";
+import { PulledRandomKeyList } from "../../features/giveaway/[id]/PulledRandomKeyList";
 import { useIsMounted } from "../../hooks";
-import { GetGiveaway, GetKey, GetKeyForReveal } from "../../models";
+import { GetGiveaway, GetKey, GetKeyForReveal, GetRandomKey } from "../../models";
 import { getGiveaway } from "../../services";
 
 type Props = {
@@ -45,15 +45,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 	const isMounted = useIsMounted();
 	const [giveaway, setGiveaway] = useState(ga);
-	const [inCooldown, setInCooldown] = useState(false);
 	const [viewedKeys, setViewedKeys] = useAtom(viewedKeysAtom);
 	const keys = viewedKeys[ga.id] || {};
-	const cooldownTimeout = useRef<number>();
 	const hasEnded = !giveaway.locked && giveaway.keys.every((key) => key.status !== KeyStatus.Mystic && key.status !== KeyStatus.Spoiled);
 
 	const getKey = (index: number) => async (captchaToken: string | null) => {
-		setInCooldown(true);
-
 		try {
 			const { data } = await axios.get<GetKeyForReveal>(`/api/giveaway/${giveaway.id}/key/${index}?captchaToken=${captchaToken}`);
 
@@ -68,10 +64,38 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					},
 				},
 			});
-
-			cooldownTimeout.current = window.setTimeout(() => setInCooldown(false), GetKeyCooldown);
 		} catch (e) {
 			if (axios.isAxiosError(e)) throw e; // let KeySpoiler handle the error
+		}
+	};
+
+	const pullKey = async (captchaToken: string | null) => {
+		try {
+			const { data } = await axios.get<GetRandomKey>(`/api/giveaway/${giveaway.id}/key?captchaToken=${captchaToken}`);
+
+			setViewedKeys({
+				...viewedKeys,
+				[ga.id]: {
+					...keys,
+					[data.index]: {
+						name: giveaway.keys[data.index].name,
+						key: data.key,
+						date: dayjs().format("DD/MM/YYYY"),
+					},
+				},
+			});
+
+			setGiveaway(
+				produce(giveaway, (draft) => {
+					const k = draft.keys.find((key) => key.index === data.index);
+
+					if (k) k.status = KeyStatus.Spoiled;
+				})
+			);
+
+			return data;
+		} catch (e) {
+			if (axios.isAxiosError(e)) throw e; // let RandomPuller handle the error
 		}
 	};
 
@@ -113,6 +137,8 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 				message: "Thank you for your feedback. Stay happy.",
 				icon: <Icon icon="bx:check" />,
 			});
+
+			return status;
 		} catch (e) {
 			if (axios.isAxiosError(e)) {
 				if (e.response?.status === 409) {
@@ -125,7 +151,10 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 							if (k) k.status = onServerStatus as KeyStatus;
 						})
 					);
+
+					return onServerStatus as KeyStatus;
 				}
+
 				updateNotification({
 					id: "send-feedback",
 					color: "red",
@@ -134,15 +163,10 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					icon: <Icon icon="bx:x" />,
 				});
 			}
+
+			return null;
 		}
 	};
-
-	useEffect(
-		() => () => {
-			if (cooldownTimeout.current) window.clearTimeout(cooldownTimeout.current);
-		},
-		[]
-	);
 
 	return (
 		<Container>
@@ -175,15 +199,16 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					</Alert>
 				)}
 				<Card>
-					<Text weight={500} mb="xs">
+					<Title order={5} mb="xs">
 						<Icon icon="bx:align-left" inline /> Description
-					</Text>
+					</Title>
 					<Text size="sm">{giveaway.description ? giveaway.description : "Enjoy the party!"}</Text>
 				</Card>
 				{giveaway.locked ? (
 					<LockedCard onUnlock={unlock} />
 				) : (
-					isMounted && (
+					isMounted &&
+					(giveaway.type === GiveawayType.Normal ? (
 						<Card>
 							<SimpleGrid cols={1} spacing="xl" breakpoints={[{ minWidth: 720, cols: 2 }]}>
 								{giveaway.keys.map(({ index, name, status, url }) => (
@@ -193,14 +218,18 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 										name={name}
 										url={url}
 										content={keys[index]?.key}
-										inCooldown={inCooldown}
 										onRequestKey={getKey(index)}
 										onReport={updateStatus(index)}
 									/>
 								))}
 							</SimpleGrid>
 						</Card>
-					)
+					) : (
+						<>
+							<RandomPuller keys={giveaway.keys} onPull={pullKey} onReport={updateStatus} />
+							<PulledRandomKeyList keys={Object.values(keys).map(({ key }) => key)} />
+						</>
+					))
 				)}
 			</Stack>
 		</Container>

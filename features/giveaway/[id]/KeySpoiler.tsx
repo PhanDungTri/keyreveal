@@ -1,15 +1,13 @@
 import { Icon } from "@iconify/react";
-import { Badge, Button, createStyles, Group, Loader, SimpleGrid, Stack, Text, Transition } from "@mantine/core";
-import { useModals } from "@mantine/modals";
+import { createStyles, Group, Stack, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { KeyStatus } from "@prisma/client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCaptchaModal } from "../../../hooks";
 import { FeedbackActions } from "./FeedbackActions";
 import { KeyCover } from "./KeyCover";
 import { KeyStatusBadge } from "./KeyStatusBadge";
-import { ProblemReportModal } from "./ProblemReportModal";
 import { ProductName } from "./ProductName";
 
 type Props = {
@@ -17,9 +15,8 @@ type Props = {
 	status: KeyStatus;
 	url?: string;
 	content?: string;
-	inCooldown?: boolean;
 	onRequestKey: (captchaToken: string | null) => Promise<void>;
-	onReport: (status: KeyStatus) => Promise<void>;
+	onReport: (status: KeyStatus) => Promise<KeyStatus | null>;
 };
 
 const useStyles = createStyles(({ colors, radius, spacing }) => ({
@@ -53,19 +50,18 @@ const useStyles = createStyles(({ colors, radius, spacing }) => ({
 		border: `1px solid ${colors.yellow[6]}`,
 		borderRadius: `${radius.md}px`,
 		zIndex: 1,
+		userSelect: "none",
 	},
 	linkIcon: {
 		borderRadius: `0px ${radius.md}px ${radius.md}px 0px`,
 	},
 }));
 
-export const KeySpoiler = ({ name, status, url, content: key = "", inCooldown, onRequestKey, onReport }: Props): JSX.Element => {
+export const KeySpoiler = ({ name, status, url, content: key = "", onRequestKey, onReport }: Props): JSX.Element => {
 	const openCaptchaModal = useCaptchaModal();
-	const modals = useModals();
 	const { classes, cx } = useStyles();
 	const [hidden, setHidden] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const [sendingFeedback, setSendingFeedback] = useState(false);
 	const available = status === KeyStatus.Mystic || status === KeyStatus.Spoiled || key !== "";
 	const allowSendFeedback = status === KeyStatus.Mystic || status === KeyStatus.Spoiled;
 
@@ -88,52 +84,18 @@ export const KeySpoiler = ({ name, status, url, content: key = "", inCooldown, o
 		}
 	};
 
-	const sendFeedback = async (status: KeyStatus) => {
-		setSendingFeedback(true);
-		await onReport(status);
-		setSendingFeedback(false);
-	};
-
-	const sendClaimedFeedback = () => sendFeedback(KeyStatus.Claimed);
-
 	const handleCaptchaModalClose = () => {
 		setHidden(true);
 		setLoading(false);
 	};
 
+	const handleReport = async (status: KeyStatus) => void onReport(status);
+
 	const toggleKey = () => {
 		if (hidden && !key) {
-			if (inCooldown) {
-				showNotification({
-					id: "cooldown-alert",
-					title: "Dude, calm down!",
-					message: "You can only get a key every 20 seconds.",
-					icon: <Icon icon="bx:time-five" />,
-					color: "gray",
-				});
-
-				return;
-			}
-
 			setLoading(true);
 			openCaptchaModal(requestKey, handleCaptchaModalClose);
 		} else setHidden(!hidden);
-	};
-
-	const openProblemReportModal = () => {
-		const handleSubmit = (status: KeyStatus) => {
-			modals.closeModal(id);
-			sendFeedback(status);
-		};
-
-		const id = modals.openModal({
-			title: (
-				<>
-					<Icon icon="bxs:flag" inline /> Report problem
-				</>
-			),
-			children: <ProblemReportModal onSubmit={handleSubmit} />,
-		});
 	};
 
 	return (
@@ -160,7 +122,7 @@ export const KeySpoiler = ({ name, status, url, content: key = "", inCooldown, o
 					</Text>
 				)}
 			</div>
-			{!hidden && allowSendFeedback && <FeedbackActions loading={sendingFeedback} onClaim={sendClaimedFeedback} onProblemReport={openProblemReportModal} />}
+			{!hidden && allowSendFeedback && <FeedbackActions onReport={handleReport} />}
 		</Stack>
 	);
 };
