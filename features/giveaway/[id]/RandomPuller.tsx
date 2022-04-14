@@ -1,12 +1,11 @@
 import { Icon } from "@iconify/react";
-import { Button, Card, Center, ColorSwatch, createStyles, Group, Progress, Stack, Text, Title, useMantineColorScheme, useMantineTheme } from "@mantine/core";
+import { Button, Card, Center, ColorSwatch, createStyles, Group, Progress, Stack, Text, Title, useMantineTheme } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { KeyStatus } from "@prisma/client";
 import axios from "axios";
 import { useState } from "react";
 import { useCaptchaModal } from "../../../hooks";
 import { GetKey, GetRandomKey } from "../../../models";
-import { pluralizeWord } from "../../../utils";
 import { FeedbackActions } from "./FeedbackActions";
 import { KeyStatusBadge } from "./KeyStatusBadge";
 

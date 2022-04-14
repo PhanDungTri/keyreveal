@@ -1,9 +1,8 @@
 import { GiveawayType, KeyStatus } from "@prisma/client";
 import { NextApiHandler } from "next";
-import { z, ZodError } from "zod";
 import { HttpMethod } from "../../../../../constants";
-import { BadRequest, BadRequestType } from "../../../../../models";
-import { getGiveawayType, getKeyForReveal, getKeyStatus, getRandomKey, updateKeyStatus, verifyCaptcha } from "../../../../../services";
+import { BadRequest } from "../../../../../models";
+import { getGiveawayType, getRandomKey, updateKeyStatus, verifyCaptcha } from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;

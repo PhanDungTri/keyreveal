@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Card, Container, Group, MediaQuery, Stack, Title } from "@mantine/core";
+import { Card, Container, Group, Stack, Title } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import axios from "axios";
 import { NextPage } from "next";
