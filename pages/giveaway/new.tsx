@@ -35,7 +35,7 @@ const NewGiveAwayPage: NextPage = () => {
 		try {
 			const {
 				data: { id },
-			} = await axios.post<NewGiveawayResponse>("/api/giveaway", { ...payload, captchaToken });
+			} = await axios.post<NewGiveawayResponse>("/api/giveaway", { ...payload, public: pub, captchaToken });
 
 			await router.push(`/giveaway/${id}`);
 

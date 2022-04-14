@@ -1,7 +1,7 @@
 import prisma from "../prisma";
 import { uid } from "../libs";
-import { GetGiveaway, GetKey, NewGiveaway } from "../models";
-import { KeyStatus } from "@prisma/client";
+import { GetGiveaway, GetKey, GetRandomKey, NewGiveaway } from "../models";
+import { GiveawayType, KeyStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 export const createGiveaway = async (newGiveaway: NewGiveaway): Promise<string> => {
@@ -38,6 +38,7 @@ export const getGiveaway = async (id: string): Promise<GetGiveaway | null> => {
 			createdAt: true,
 			public: true,
 			password: true,
+			type: true,
 			keys: {
 				select: {
 					index: true,
@@ -60,6 +61,17 @@ export const getGiveaway = async (id: string): Promise<GetGiveaway | null> => {
 	}
 
 	return null;
+};
+
+export const getGiveawayType = async (id: string): Promise<GiveawayType | null> => {
+	const giveaway = await prisma.giveaway.findUnique({
+		where: { id },
+		select: {
+			type: true,
+		},
+	});
+
+	return giveaway?.type || null;
 };
 
 export const getKeyForReveal = async (giveawayId: string, index: number): Promise<string | null> => {
@@ -144,4 +156,29 @@ export const getKeys = async (giveawayId: string): Promise<GetKey[]> => {
 	});
 
 	return keys;
+};
+
+export const getRandomKey = async (giveawayId: string): Promise<GetRandomKey | null> => {
+	if (giveawayId == undefined) return null;
+
+	const keys = await prisma.key.findMany({
+		where: {
+			giveawayId,
+			status: {
+				in: [KeyStatus.Mystic, KeyStatus.Spoiled],
+			},
+		},
+		select: {
+			key: true,
+			index: true,
+			status: true,
+		},
+	});
+
+	if (keys.length == 0) return null;
+	if (keys.length == 1) return keys[0].key;
+
+	const randomIndex = Math.floor(Math.random() * keys.length);
+
+	return keys[randomIndex];
 };

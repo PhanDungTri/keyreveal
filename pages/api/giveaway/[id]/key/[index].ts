@@ -1,9 +1,9 @@
-import { KeyStatus } from "@prisma/client";
+import { GiveawayType, KeyStatus } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { z, ZodError } from "zod";
 import { HttpMethod } from "../../../../../constants";
 import { BadRequest, BadRequestType } from "../../../../../models";
-import { getKeyForReveal, getKeyStatus, updateKeyStatus, verifyCaptcha } from "../../../../../services";
+import { getGiveawayType, getKeyForReveal, getKeyStatus, updateKeyStatus, verifyCaptcha } from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
@@ -17,6 +17,10 @@ const handler: NextApiHandler = async (req, res) => {
 
 			try {
 				verifyCaptcha(captchaToken as string);
+
+				const type = await getGiveawayType(giveawayId);
+
+				if (type !== GiveawayType.Normal) return res.status(400).json({ message: "Cannot reveal key for this type of giveaway" });
 
 				const key = await getKeyForReveal(giveawayId, keyIndex);
 

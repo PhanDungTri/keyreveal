@@ -10,7 +10,7 @@ import { GiveawayTypeDescription } from "./GiveawayTypeDescription";
 import { KeyInfoPart } from "./KeyInfoPart";
 
 type Props = {
-	onSubmit: (data: Omit<NewGiveaway, "public">) => void;
+	onSubmit: (data: NewGiveaway) => void;
 };
 
 export const CreateGiveawayForm = ({ onSubmit }: Props): JSX.Element => {
@@ -32,12 +32,12 @@ export const CreateGiveawayForm = ({ onSubmit }: Props): JSX.Element => {
 		setType(mappedGiveawayType[index]);
 	};
 
-	useEffect(() => {
-		form.register("public");
-	}, []);
+	const submit = (data: NewGiveaway) => onSubmit({ ...data, type });
+
+	useEffect(() => void form.register("public"), []);
 
 	return (
-		<form id="new-giveaway-form" onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}>
+		<form id="new-giveaway-form" onSubmit={form.handleSubmit(submit)}>
 			<FormProvider {...form}>
 				<Card mb="xs">
 					<GeneralInfoPart />
