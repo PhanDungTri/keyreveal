@@ -3,7 +3,16 @@ import { NextApiHandler } from "next";
 import { z, ZodError } from "zod";
 import { HttpMethod } from "../../../../../constants";
 import { BadRequest, BadRequestType } from "../../../../../models";
-import { getGiveawayType, getKeyForReveal, getKeyStatus, updateKeyStatus, verifyCaptcha } from "../../../../../services";
+import {
+	closeGiveaway,
+	getGiveawayType,
+	getKeyForReveal,
+	getKeyStatus,
+	getRandomKey,
+	shouldCloseGiveaway,
+	updateKeyStatus,
+	verifyCaptcha,
+} from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
@@ -59,6 +68,9 @@ const handler: NextApiHandler = async (req, res) => {
 						if (currentStatus === KeyStatus.Mystic) res.status(400).json({ message: "Key has not been revealed yet" });
 						else if (currentStatus === KeyStatus.Spoiled) {
 							await updateKeyStatus(giveawayId, keyIndex, status);
+
+							if (await shouldCloseGiveaway(giveawayId)) await closeGiveaway(giveawayId);
+
 							res.status(200).json({ message: "Successful" });
 						} else res.status(409).json({ message: "Key is already got feedback", status: currentStatus });
 					} else res.status(404).json({ message: "Key not found" });

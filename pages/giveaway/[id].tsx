@@ -59,7 +59,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					[index]: {
 						name: giveaway.keys[index].name,
 						key: data.key,
-						date: dayjs().format("DD/MM/YYYY"),
+						date: dayjs().format("YYYY-MM-DD"),
 					},
 				},
 			});
@@ -79,7 +79,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 					[data.index]: {
 						name: giveaway.keys[data.index].name,
 						key: data.key,
-						date: dayjs().format("DD/MM/YYYY"),
+						date: dayjs().format("YYYY-MM-DD"),
 					},
 				},
 			});
@@ -168,7 +168,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 	};
 
 	return (
-		<Container>
+		<Container my="md">
 			<Stack spacing="xs">
 				<Card>
 					<Title order={3}>

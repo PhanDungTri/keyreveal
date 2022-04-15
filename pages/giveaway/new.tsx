@@ -65,7 +65,7 @@ const NewGiveAwayPage: NextPage = () => {
 	const handleSave = async (payload: Omit<NewGiveaway, "public">) => openCaptchaModal(postNewGiveaway({ ...payload, public: pub }));
 
 	return (
-		<Container size="lg" py="md">
+		<Container size="lg" my="md">
 			<Stack spacing="xs">
 				<Card>
 					<Group position="apart" noWrap>

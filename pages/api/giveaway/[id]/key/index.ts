@@ -2,7 +2,7 @@ import { GiveawayType, KeyStatus } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { HttpMethod } from "../../../../../constants";
 import { BadRequest } from "../../../../../models";
-import { getGiveawayType, getRandomKey, updateKeyStatus, verifyCaptcha } from "../../../../../services";
+import { closeGiveaway, getGiveawayType, getRandomKey, shouldCloseGiveaway, updateKeyStatus, verifyCaptcha } from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
@@ -24,6 +24,9 @@ const handler: NextApiHandler = async (req, res) => {
 
 				if (key) {
 					await updateKeyStatus(giveawayId, key.index, KeyStatus.Spoiled);
+
+					if (await shouldCloseGiveaway(giveawayId)) await closeGiveaway(giveawayId);
+
 					res.status(200).json(key);
 				} else res.status(404).json({ message: "Key not found" });
 			} catch (e) {
