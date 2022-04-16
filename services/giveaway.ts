@@ -1,8 +1,9 @@
-import prisma from "../prisma";
-import { uid } from "../libs";
-import { GetGiveaway, GetKey, GetRandomKey, NewGiveaway } from "../models";
 import { GiveawayType, KeyStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { ItemsPerPage } from "../constants";
+import { uid } from "../libs";
+import { GetGiveaway, GetGiveawayListItem, GetKey, GetRandomKey, NewGiveaway } from "../models";
+import prisma from "../prisma";
 
 export const createGiveaway = async (newGiveaway: NewGiveaway): Promise<string> => {
 	const { keys, ...payload } = newGiveaway;
@@ -181,4 +182,76 @@ export const getRandomKey = async (giveawayId: string): Promise<GetRandomKey | n
 	const randomIndex = Math.floor(Math.random() * keys.length);
 
 	return keys[randomIndex];
+};
+
+export const getGiveawayList = async (page = 1): Promise<GetGiveawayListItem[]> => {
+	const giveaways = await prisma.giveaway.findMany({
+		skip: (page - 1) * ItemsPerPage,
+		take: ItemsPerPage,
+		select: {
+			id: true,
+			title: true,
+			createdAt: true,
+			password: true,
+			type: true,
+			keys: {
+				select: {
+					status: true,
+				},
+			},
+		},
+		where: {
+			public: true,
+			ended: false,
+		},
+		orderBy: {
+			createdAt: "desc",
+		},
+	});
+
+	return giveaways.map(({ password, keys, ...ga }) => ({
+		...ga,
+		locked: !!password,
+		totalKeys: keys.length,
+		remainingKeys: keys.filter((k) => k.status === KeyStatus.Mystic || k.status === KeyStatus.Spoiled).length,
+	}));
+};
+
+export const closeGiveaway = async (giveawayId: string): Promise<void> => {
+	if (giveawayId == undefined) return;
+
+	await prisma.giveaway.update({
+		where: {
+			id: giveawayId,
+		},
+		data: {
+			ended: true,
+		},
+	});
+};
+
+export const shouldCloseGiveaway = async (giveawayId: string): Promise<boolean> => {
+	if (giveawayId == undefined) return false;
+
+	const count = await prisma.key.count({
+		where: {
+			giveawayId,
+			status: {
+				in: [KeyStatus.Mystic, KeyStatus.Spoiled],
+			},
+		},
+	});
+
+	return count === 0;
+};
+
+export const getTotalPagesOfGiveaways = async (): Promise<number> => {
+	const count = await prisma.giveaway.count({
+		where: {
+			public: true,
+			ended: false,
+		},
+	});
+
+	return Math.ceil(count / ItemsPerPage);
 };

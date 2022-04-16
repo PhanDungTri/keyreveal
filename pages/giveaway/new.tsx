@@ -3,6 +3,7 @@ import { Card, Container, Group, Stack, Title } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import axios from "axios";
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { Media } from "../../components";
@@ -65,26 +66,31 @@ const NewGiveAwayPage: NextPage = () => {
 	const handleSave = async (payload: Omit<NewGiveaway, "public">) => openCaptchaModal(postNewGiveaway({ ...payload, public: pub }));
 
 	return (
-		<Container size="lg" py="md">
-			<Stack spacing="xs">
-				<Card>
-					<Group position="apart" noWrap>
-						<Title order={3}>
-							Hold a new giveaway <Icon icon="bxs:gift" inline />
-						</Title>
-						<Media greaterThanOrEqual="md">
-							<GiveawaySubmitPanel isWideScreen posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
-						</Media>
-					</Group>
-				</Card>
-				<CreateGiveawayForm onSubmit={handleSave} />
-				<Media lessThan="md">
+		<>
+			<Head>
+				<title>Create a new giveaway</title>
+			</Head>
+			<Container my="xl">
+				<Stack spacing="xs">
 					<Card>
-						<GiveawaySubmitPanel posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+						<Group position="apart" noWrap>
+							<Title order={3}>
+								Hold a new giveaway <Icon icon="bxs:gift" inline />
+							</Title>
+							<Media greaterThanOrEqual="md">
+								<GiveawaySubmitPanel isWideScreen posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+							</Media>
+						</Group>
 					</Card>
-				</Media>
-			</Stack>
-		</Container>
+					<CreateGiveawayForm onSubmit={handleSave} />
+					<Media lessThan="md">
+						<Card>
+							<GiveawaySubmitPanel posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
+						</Card>
+					</Media>
+				</Stack>
+			</Container>
+		</>
 	);
 };
 

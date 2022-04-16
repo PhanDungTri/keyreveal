@@ -136,13 +136,15 @@ export type GetKeyForReveal = {
 	key: string;
 };
 
+export type ViewedKey = {
+	key: string;
+	name: string;
+	date: string;
+};
+
 export type LocalStorageViewedKey = {
 	[giveawayId: string]: {
-		[index: number]: {
-			key: string;
-			name: string;
-			date: string;
-		};
+		[index: number]: ViewedKey;
 	};
 };
 
@@ -150,4 +152,14 @@ export type GetRandomKey = {
 	key: string;
 	index: number;
 	status: KeyStatus;
+};
+
+export type GetGiveawayListItem = {
+	id: string;
+	title: string;
+	type: GiveawayType;
+	locked: boolean;
+	totalKeys: number;
+	remainingKeys: number;
+	createdAt: Date;
 };
