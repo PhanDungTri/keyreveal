@@ -54,7 +54,7 @@ const IndexPage: NextPage = () => {
 					<Stack align="center" mb="xl">
 						<KeyrevealLogo />
 						<LogoName align="center" size={40} />
-						<Text size="sm" weight={500} color="dimmed">
+						<Text size="sm" weight={500} color="dimmed" align="center">
 							Ready to share and discover many awesome gifts?
 						</Text>
 					</Stack>
