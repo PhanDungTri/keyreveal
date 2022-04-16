@@ -1,20 +1,24 @@
-import { AppProps } from "next/app";
-import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
-import "../styles/globals.css";
-import { MediaProvider } from "../components";
-import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useAtom } from "jotai";
-import { viewedKeysAtom } from "../atom";
-import { ViewedKey } from "../models";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import NextNProgress from "nextjs-progressbar";
+import { useEffect } from "react";
+import { viewedKeysAtom } from "../atom";
+import { Header, MediaProvider } from "../components";
+import { Footer } from "../components/Footer";
+import { ViewedKey } from "../models";
+import "../styles/globals.css";
 
 export default function App(props: AppProps) {
-	const { Component, pageProps } = props;
+	const router = useRouter();
 	const [keys, setKeys] = useAtom(viewedKeysAtom);
+	const { Component, pageProps } = props;
+	const isLandingPage = router.pathname === "/";
 
 	useEffect(() => {
 		const cleaned: Record<string, Record<number, ViewedKey>> = {};
@@ -38,8 +42,15 @@ export default function App(props: AppProps) {
 	return (
 		<>
 			<Head>
-				<title>Page title</title>
+				<title>Welcome to KEYREVEAL</title>
 				<meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+				<link rel="preload" href="/fonts/logo.ttf" as="font" crossOrigin="" />
+				<meta property="og:type" content="website" />
+				<meta property="og:title" content="KEYREVEAL" />
+				<meta property="og:description" content="Enjoy and share the fun at KEYREVEAL!" />
+				<meta property="og:image" content="/images/thumbnail.png" />
+				<meta name="twitter:card" content="summary" />
+				<meta property="twitter:image" content="/images/thumbnail.png" />
 			</Head>
 
 			<MediaProvider>
@@ -54,7 +65,15 @@ export default function App(props: AppProps) {
 					<ModalsProvider>
 						<NotificationsProvider>
 							<NextNProgress color="#FAB005" />
-							<Component {...pageProps} />
+							{isLandingPage ? (
+								<Component {...pageProps} />
+							) : (
+								<main>
+									<Header />
+									<Component {...pageProps} />
+									<Footer />
+								</main>
+							)}
 						</NotificationsProvider>
 					</ModalsProvider>
 				</MantineProvider>

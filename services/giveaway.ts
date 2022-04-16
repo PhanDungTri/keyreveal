@@ -1,6 +1,6 @@
 import { GiveawayType, KeyStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { NumberOfItemsPerPage } from "../constants";
+import { ItemsPerPage } from "../constants";
 import { uid } from "../libs";
 import { GetGiveaway, GetGiveawayListItem, GetKey, GetRandomKey, NewGiveaway } from "../models";
 import prisma from "../prisma";
@@ -186,8 +186,8 @@ export const getRandomKey = async (giveawayId: string): Promise<GetRandomKey | n
 
 export const getGiveawayList = async (page = 1): Promise<GetGiveawayListItem[]> => {
 	const giveaways = await prisma.giveaway.findMany({
-		skip: (page - 1) * NumberOfItemsPerPage,
-		take: NumberOfItemsPerPage,
+		skip: (page - 1) * ItemsPerPage,
+		take: ItemsPerPage,
 		select: {
 			id: true,
 			title: true,
@@ -253,5 +253,5 @@ export const getTotalPagesOfGiveaways = async (): Promise<number> => {
 		},
 	});
 
-	return Math.ceil(count / NumberOfItemsPerPage);
+	return Math.ceil(count / ItemsPerPage);
 };

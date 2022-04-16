@@ -1,0 +1,23 @@
+@font-face {
+	font-family: "logo";
+	src: url("/fonts/logo.ttf");
+}
+
+main {
+	min-height: 100vh;
+	position: relative;
+}
+
+main::after {
+	content: "";
+	display: block;
+	height: 100px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100px;
+}

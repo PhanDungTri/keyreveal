@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
-import { Card, Container, Stack, Tabs, Text } from "@mantine/core";
+import { Card, Container, Group, Pagination, Stack, Tabs, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { GivewayListItem, ViewedKeyTable } from "../../features";
 import { GetGiveawayListItem } from "../../models";
@@ -12,8 +14,8 @@ type Props = {
 	pages: number;
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-	const list = await getGiveawayList(parseInt(params?.page as string) || 1);
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+	const list = await getGiveawayList(parseInt(query?.page as string) || 1);
 	const pages = await getTotalPagesOfGiveaways();
 
 	return {
@@ -27,11 +29,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	};
 };
 
-const GivewayListPage: NextPage<Props> = ({ list }) => {
+const GivewayListPage: NextPage<Props> = ({ list, pages }) => {
+	const router = useRouter();
 	const [activeTab, setActiveTab] = useState(0);
+	const page = parseInt((router.query?.page as string) || "1");
+
+	const handlePageChange = (p: number) => {
+		if (p !== page) router.push(`/giveaway?page=${p}`);
+	};
 
 	return (
-		<Container my="md">
+		<Container my="xl">
 			<Stack spacing="xs">
 				<Card>
 					<Tabs defaultValue={activeTab} onTabChange={setActiveTab}>
@@ -41,7 +49,14 @@ const GivewayListPage: NextPage<Props> = ({ list }) => {
 				</Card>
 				{activeTab === 0 ? (
 					list.length > 0 ? (
-						list.map((item) => <GivewayListItem key={item.id} item={item} />)
+						<>
+							{list.map((item) => (
+								<GivewayListItem key={item.id} item={item} />
+							))}
+							<Group position="right">
+								<Pagination size="sm" page={page} onChange={handlePageChange} total={pages} />
+							</Group>
+						</>
 					) : (
 						<Card>
 							<Text size="sm" color="dimmed">
