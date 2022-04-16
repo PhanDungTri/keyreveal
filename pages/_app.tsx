@@ -9,8 +9,7 @@ import { useRouter } from "next/router";
 import NextNProgress from "nextjs-progressbar";
 import { useEffect } from "react";
 import { viewedKeysAtom } from "../atom";
-import { Header, MediaProvider } from "../components";
-import { Footer } from "../components/Footer";
+import { Footer, Header, MediaProvider } from "../components";
 import { ViewedKey } from "../models";
 import "../styles/globals.css";
 

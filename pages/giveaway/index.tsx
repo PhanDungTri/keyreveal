@@ -2,7 +2,6 @@ import { Icon } from "@iconify/react";
 import { Card, Container, Group, Pagination, Stack, Tabs, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { GivewayListItem, ViewedKeyTable } from "../../features";
