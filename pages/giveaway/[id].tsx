@@ -253,7 +253,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 						isMounted &&
 						(giveaway.type === GiveawayType.Normal ? (
 							<Card>
-								<SimpleGrid cols={1} spacing="xl" breakpoints={[{ minWidth: 720, cols: 2 }]}>
+								<SimpleGrid cols={1} spacing="xl" breakpoints={[{ minWidth: 767, cols: 2 }]}>
 									{giveaway.keys.map(({ index, name, status, url }) => (
 										<KeySpoiler
 											status={status}

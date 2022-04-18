@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { Media } from "../../components";
 import { GivewayListItem, ViewedKeyTable } from "../../features";
 import { GetGiveawayListItem } from "../../models";
 import { getGiveawayList, getTotalPagesOfGiveaways } from "../../services";
@@ -41,10 +42,18 @@ const GivewayListPage: NextPage<Props> = ({ list, pages }) => {
 		<Container my="xl">
 			<Stack spacing="xs">
 				<Card>
-					<Tabs defaultValue={activeTab} onTabChange={setActiveTab}>
-						<Tabs.Tab label="All giveaways" icon={<Icon icon="bxs:gift" />} />
-						<Tabs.Tab label="Viewed keys" icon={<Icon icon="bxs:show" />} />
-					</Tabs>
+					<Media greaterThan="mobileS">
+						<Tabs defaultValue={activeTab} onTabChange={setActiveTab}>
+							<Tabs.Tab label="All giveaways" icon={<Icon icon="bxs:gift" />} />
+							<Tabs.Tab label="Viewed keys" icon={<Icon icon="bxs:show" />} />
+						</Tabs>
+					</Media>
+					<Media at="mobileS">
+						<Tabs defaultValue={activeTab} onTabChange={setActiveTab}>
+							<Tabs.Tab label="All giveaways" />
+							<Tabs.Tab label="Viewed keys" />
+						</Tabs>
+					</Media>
 				</Card>
 				{activeTab === 0 ? (
 					list.length > 0 ? (

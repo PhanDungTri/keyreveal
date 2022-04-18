@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCaptchaModal } from "../../../hooks";
 import { FeedbackActions } from "./FeedbackActions";
 import { KeyCover } from "./KeyCover";
-import { KeyStatusBadge } from "./KeyStatusBadge";
+import { KeyStatusBadge } from "../../../components";
 import { ProductName } from "./ProductName";
 
 type Props = {
@@ -102,7 +102,7 @@ export const KeySpoiler = ({ name, status, url, content: key = "", onRequestKey,
 		<Stack spacing="xs">
 			<Group>
 				{url ? (
-					<a style={{ textDecoration: "none", color: "inherit" }} target="_blank" href={url} rel="noopener noreferrer">
+					<a target="_blank" href={url} rel="noopener noreferrer">
 						<Text size="sm" weight={500}>
 							&bull; <ProductName name={name} available={available} /> <Icon icon="bx:link" inline />
 						</Text>

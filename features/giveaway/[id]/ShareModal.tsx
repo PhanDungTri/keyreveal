@@ -19,19 +19,6 @@ export const ShareModal = (): JSX.Element => {
 
 	return (
 		<Stack>
-			<script
-				type="text/javascript"
-				src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-				data-name="bmc-button"
-				data-slug="phandungtri"
-				data-color="#FFDD00"
-				data-emoji="🥡"
-				data-font="Poppins"
-				data-text="Buy me a cup of noodle"
-				data-outline-color="#000000"
-				data-font-color="#000000"
-				data-coffee-color="#ffffff"
-			></script>
 			<Group position="center">
 				<FacebookShareButton url={window.location.href} hashtag="#keyreveal" quote="Hey buddies! Enjoy this awesome giveaway!">
 					<FacebookIcon size={48} />

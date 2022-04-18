@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCaptchaModal } from "../../../hooks";
 import { GetKey, GetRandomKey } from "../../../models";
 import { FeedbackActions } from "./FeedbackActions";
-import { KeyStatusBadge } from "./KeyStatusBadge";
+import { KeyStatusBadge } from "../../../components";
 
 type Props = {
 	keys: GetKey[];

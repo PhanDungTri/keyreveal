@@ -1,22 +1,12 @@
 import { Icon } from "@iconify/react";
-import { ActionIcon, Button, createStyles, Group, Image, keyframes, Text, useMantineTheme } from "@mantine/core";
+import { Burger, Button, createStyles, Drawer, Group, Image, Stack, Tooltip } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { CreateGiveawayButton } from "./CreateGiveawayButton";
 import { LogoName } from "./LogoName";
 import { Media } from "./Media";
 import { KeyrevealLogo } from "./svg/KeyrevealLogo";
-
-const shiningAnimation = keyframes({
-	"0%": {
-		left: "-100%",
-	},
-	"10%": {
-		left: "100%",
-	},
-	"100%": {
-		left: "100%",
-	},
-});
 
 const useStyles = createStyles(({ colors }) => ({
 	header: {
@@ -30,24 +20,8 @@ const useStyles = createStyles(({ colors }) => ({
 		cursor: "pointer",
 		userSelect: "none",
 	},
-	createButton: {
-		overflow: "hidden",
-
-		[`&::before`]: {
-			content: "''",
-			position: "absolute",
-			top: 0,
-			left: "-100%",
-			width: "100%",
-			height: "100%",
-			background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent)",
-			animation: `${shiningAnimation} 3s ease-out infinite`,
-		},
-	},
-	sourceCodeLink: {
+	githubLink: {
 		lineHeight: 1,
-		textDecoration: "none",
-		color: "inherit",
 		height: "32px",
 	},
 	buyMeCoffeeButton: {
@@ -65,40 +39,88 @@ const useStyles = createStyles(({ colors }) => ({
 
 export const Header = (): JSX.Element => {
 	const router = useRouter();
-	const { colors } = useMantineTheme();
 	const { classes } = useStyles();
+	const [opened, setOpened] = useState(false);
 	const hideCreateButton = router.pathname === "/giveaway/new";
+
+	const toggleDrawer = () => setOpened(!opened);
+
+	const closeDrawer = () => setOpened(false);
 
 	return (
 		<header>
 			<Group p="sm" className={classes.header} position="apart">
-				<Link href="/giveaway" passHref>
-					<Group spacing="xs" className={classes.logo}>
-						<KeyrevealLogo width={32} height={32} />
-						<Media greaterThanOrEqual="md">
-							<LogoName />
-						</Media>
-					</Group>
-				</Link>
+				<Group>
+					<Link href="/giveaway" passHref>
+						<Group spacing="xs" className={classes.logo}>
+							<KeyrevealLogo width={32} height={32} />
+							<Media greaterThanOrEqual="tablet">
+								<LogoName />
+							</Media>
+						</Group>
+					</Link>
+				</Group>
 				<Group spacing="xl">
-					<a className={classes.sourceCodeLink} href="https://github.com/PhanDungTri/keyreveal" target="_blank" rel="noreferrer">
-						<Icon icon="bxl:github" width={32} height={32} />
-					</a>
-					<a href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
-						<Image
-							className={classes.buyMeCoffeeButton}
-							src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg"
-							alt="buy-me-a-coffee-button"
-							height={36}
-						/>
-					</a>
-					{!hideCreateButton && (
-						<Link href="/giveaway/new" passHref>
-							<Button variant="gradient" gradient={{ from: "grape", to: "red", deg: 35 }} rightIcon={<Icon icon="bx:party" />} className={classes.createButton}>
-								Create new party
-							</Button>
-						</Link>
-					)}
+					<Media greaterThanOrEqual="tablet">
+						<Group spacing="xl">
+							<a className={classes.githubLink} href="https://github.com/PhanDungTri/keyreveal/issues/new" target="_blank" rel="noreferrer">
+								<Tooltip label="Send me a feedback">
+									<Icon icon="bxs:comment-detail" width={32} height={32} />
+								</Tooltip>
+							</a>
+							<a className={classes.githubLink} href="https://github.com/PhanDungTri/keyreveal" target="_blank" rel="noreferrer">
+								<Tooltip label="Discover KEYREVEAL source code">
+									<Icon icon="bxl:github" width={32} height={32} />
+								</Tooltip>
+							</a>
+							<a href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
+								<Image
+									className={classes.buyMeCoffeeButton}
+									src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg"
+									alt="buy-me-a-coffee-button"
+									height={36}
+								/>
+							</a>
+						</Group>
+					</Media>
+					{!hideCreateButton && <CreateGiveawayButton />}
+					<Media lessThan="tablet">
+						<Drawer
+							opened={opened}
+							onClose={closeDrawer}
+							size="sm"
+							padding="xs"
+							title={
+								<Group>
+									<KeyrevealLogo width={24} height={24} />
+									<LogoName size={16} />
+								</Group>
+							}
+						>
+							<Stack>
+								<a className={classes.githubLink} href="https://github.com/PhanDungTri/keyreveal/issues/new" target="_blank" rel="noreferrer">
+									<Button variant="subtle" leftIcon={<Icon icon="bxs:comment-detail" />}>
+										Send me a feedback
+									</Button>
+								</a>
+								<a className={classes.githubLink} href="https://github.com/PhanDungTri/keyreveal" target="_blank" rel="noreferrer">
+									<Button variant="subtle" leftIcon={<Icon icon="bxl:github" />}>
+										Source code
+									</Button>
+								</a>
+								<a style={{ alignSelf: "center" }} href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
+									<Image
+										className={classes.buyMeCoffeeButton}
+										src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg"
+										alt="buy-me-a-coffee-button"
+										width="auto"
+										height={40}
+									/>
+								</a>
+							</Stack>
+						</Drawer>
+						<Burger opened={opened} onClick={toggleDrawer} />
+					</Media>
 				</Group>
 			</Group>
 			<div className={classes.bottomBorder} />

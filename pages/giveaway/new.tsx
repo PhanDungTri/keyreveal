@@ -77,13 +77,13 @@ const NewGiveAwayPage: NextPage = () => {
 							<Title order={3}>
 								Hold a new giveaway <Icon icon="bxs:gift" inline />
 							</Title>
-							<Media greaterThanOrEqual="md">
+							<Media greaterThanOrEqual="tablet">
 								<GiveawaySubmitPanel isWideScreen posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
 							</Media>
 						</Group>
 					</Card>
 					<CreateGiveawayForm onSubmit={handleSave} />
-					<Media lessThan="md">
+					<Media lessThan="tablet">
 						<Card>
 							<GiveawaySubmitPanel posting={posting} defaultChecked={pub} onVisibilityChange={changeVisibility} />
 						</Card>

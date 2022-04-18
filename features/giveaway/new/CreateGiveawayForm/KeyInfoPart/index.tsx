@@ -45,8 +45,8 @@ export const KeyInfoPart = ({ type, onChangeType }: Props): JSX.Element => {
 					cols={1}
 					spacing="xs"
 					breakpoints={[
-						{ minWidth: 648, cols: 2 },
-						{ minWidth: 1024, cols: 3 },
+						{ minWidth: 767, cols: 2 },
+						{ minWidth: 1023, cols: 3 },
 					]}
 				>
 					{fields.map((field, index) => (

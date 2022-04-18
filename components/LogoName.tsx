@@ -1,8 +1,10 @@
 import { createStyles, Text } from "@mantine/core";
+import { ElementType } from "react";
 
 type Props = {
 	align?: "center" | "left" | "right";
 	size?: number;
+	inline?: boolean;
 };
 
 const useStyles = createStyles((_, params: Pick<Props, "size">) => ({
@@ -13,11 +15,11 @@ const useStyles = createStyles((_, params: Pick<Props, "size">) => ({
 	},
 }));
 
-export const LogoName = ({ align, size = 24 }: Props): JSX.Element => {
+export const LogoName = ({ align, size = 24, inline }: Props): JSX.Element => {
 	const { classes } = useStyles({ size });
 
 	return (
-		<Text color="yellow" align={align} className={classes.logoText}>
+		<Text component={inline ? "span" : "div"} color="yellow" align={align} className={classes.logoText}>
 			KEYREVEAL
 		</Text>
 	);
