@@ -67,7 +67,7 @@ export default function App(props: AppProps) {
 				<meta name="msapplication-TileColor" content="#141517" />
 				<meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
 				<meta name="theme-color" content="#141517" />
-				<script async defer data-website-id="465c6572-dbf5-4328-9158-0daa57bcf3d9" src="https://umami.keyreveal.fun/umami.js" />
+				<script async defer data-website-id={process.env.NEXT_PUBLIC_UMAMI_ID} src={process.env.NEXT_PUBLIC_UMAMI_URL} />
 			</Head>
 
 			<MediaProvider>
