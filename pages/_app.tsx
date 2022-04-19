@@ -68,6 +68,7 @@ export default function App(props: AppProps) {
 				<meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
 				<meta name="theme-color" content="#141517" />
 				<script async defer data-website-id={process.env.NEXT_PUBLIC_UMAMI_ID} src={process.env.NEXT_PUBLIC_UMAMI_URL} />
+				<script async src={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_URL} crossOrigin="anonymous"></script>
 			</Head>
 
 			<MediaProvider>

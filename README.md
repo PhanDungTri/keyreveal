@@ -9,6 +9,10 @@
   <p align="center">
     You don't have to try all the keys
   </p>
+
+  <a href="https://www.buymeacoffee.com/phandungtri">
+    <img src="public/images/buymeacoffee-button.svg" alt="Logo" height="48" >
+  </a>
 </div>
 
 ## About The Project
@@ -48,20 +52,17 @@ But there are also many people, I call them the ninjas, just sneak in, grab the 
    npm install
    ```
 
-3. Open the `.env.example` file, copy the content to `.env` file and replace the values with your own.
+3. Open the `.env.example` file, copy these below fields to `.env` file and replace the values with your own.
 
    ```sh
    DATABASE_URL=
    RECAPTCHA_SECRET_KEY=
    NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
-   NEXT_PUBLIC_UMAMI_ID=
-   NEXT_PUBLIC_UMAMI_URL=
    ```
 
    _Note:_
 
    - _For [Google ReCAPTCHA](https://www.google.com/recaptcha/admin/create), you have to register your own site key and secret key._
-   - _For [Umami](https://umami.is/), you can ignore it._
 
 4. Run the application
 
