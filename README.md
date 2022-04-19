@@ -1,34 +1,100 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<br />
+<div align="center">
+  <a href="https://github.com/PhanDungTri/keyreveal">
+    <img src="public/favicon-96x96.png" alt="Logo" width="96" height="96">
+  </a>
+
+  <h2 align="center">KEYREVEAL</h2>
+
+  <p align="center">
+    You don't have to try all the keys
+  </p>
+</div>
+
+## About The Project
+
+[![KEYREVEAL thumbnail](public/images/thumbnail.png "KEYREVEAL")](https://keyreveal.fun)
+
+**Everyone :heart: giveaways and so do I :tada:**
+
+I have taken part in many of them, most of them are on the social media. The host publicly post a bunch of product keys in a Facebook group or subreddit. These giveaways are first come, first served. Some kind people leave the message after claiming the keys so that latecomers will know which key is still available.
+
+But there are also many people, I call them the ninjas, just sneak in, grab the keys then slip out without saying anything. This makes the latecomers have to try they keys one by one to realize that these keys are already **CLAIMED**. What an evil!
+
+**KEYREVEAL** allow everyone to fully enjoy the fun of the giveaways by providing the way to keep track the statuses of the keys. So that people can know which key is already claimed and which one is still available. Besides, the host can make the giveaway public or private, or protect it with the password. And finally, **KEYREVEAL** is open source.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting Started
 
-First, run the development server:
+**KEYREVEAL** is a fullstack [Next.js](https://nextjs.org/) project and it's strongly typed with [TypeScript](https://www.typescriptlang.org/). I'm using [Mantine](https://mantine.dev/), "a fully featured React components library", to build the frontend and it's super cool. To deal with forms, I'm using [React Hook Form](https://react-hook-form.com/) and [Zod](https://github.com/colinhacks/zod/) for data validation. [Prisma](https://www.prisma.io/) is the best choice to work with the database.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Node.js](https://nodejs.org/) version >= 12.2.0
+- Setup a RDBMS (MySQL, PostgreSQL, SQLite, etc.)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+1. Clone the repo
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+   ```sh
+   git clone https://github.com/PhanDungTri/keyreveal.git
+   ```
 
-## Learn More
+2. Install NPM packages
 
-To learn more about Next.js, take a look at the following resources:
+   ```sh
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Open the `.env.example` file, copy the content to `.env` file and replace the values with your own.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```sh
+   DATABASE_URL=
+   RECAPTCHA_SECRET_KEY=
+   NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
+   NEXT_PUBLIC_UMAMI_ID=
+   NEXT_PUBLIC_UMAMI_URL=
+   ```
 
-## Deploy on Vercel
+   _Note:_
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - _For [Google ReCAPTCHA](https://www.google.com/recaptcha/admin/create), you have to register your own site key and secret key._
+   - _For [Umami](https://umami.is/), you can ignore it._
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Run the application
+
+   ```sh
+   npm run dev
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contact
+
+Phan Dung Tri - [LinkedIn](https://www.linkedin.com/in/dung-tri-phan-261b8b230/) - phandungtri99@gmail.com
+
+<p align="right">(<a href="#top">back to top</a>)</p>
