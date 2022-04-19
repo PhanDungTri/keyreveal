@@ -41,6 +41,12 @@ export const Footer = (): JSX.Element => {
 						</Text>
 					</Link>
 					&bull;
+					<Link href="/terms/privacy-policy" passHref>
+						<Text sx={{ cursor: "pointer	" }} size="xs" variant="link" color="dimmed" align="center">
+							Privacy Policy
+						</Text>
+					</Link>
+					&bull;
 					<Link href="/terms/disclaimer" passHref>
 						<Text sx={{ cursor: "pointer	" }} size="xs" variant="link" color="dimmed" align="center">
 							Disclaimer
