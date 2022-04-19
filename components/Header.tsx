@@ -74,7 +74,7 @@ export const Header = (): JSX.Element => {
 								</Tooltip>
 							</a>
 							<a href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
-								<Image className={classes.buyMeCoffeeButton} src="images/buymeacoffee-button.svg" alt="buy-me-a-coffee-button" height={36} />
+								<Image className={classes.buyMeCoffeeButton} src="/images/buymeacoffee-button.svg" alt="buy-me-a-coffee-button" height={36} />
 							</a>
 						</Group>
 					</Media>
