@@ -9,15 +9,11 @@
   <p align="center">
     You don't have to try all the keys
   </p>
-
-  <a href="https://www.buymeacoffee.com/phandungtri">
-    <img src="public/images/buymeacoffee-button.svg" alt="Logo" height="48" >
-  </a>
 </div>
 
 ## About The Project
 
-[![KEYREVEAL thumbnail](public/images/thumbnail.png "KEYREVEAL")](https://keyreveal.fun)
+[KEYREVEAL thumbnail](public/images/thumbnail.png "KEYREVEAL")
 
 **Everyone :heart: giveaways and so do I :tada:**
 
