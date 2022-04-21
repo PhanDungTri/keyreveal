@@ -128,6 +128,7 @@ export type GetGiveaway = {
 	description: string | null;
 	createdAt: Date;
 	public: boolean;
+	ended: boolean;
 	locked: boolean;
 	keys: GetKey[];
 };
@@ -159,7 +160,13 @@ export type GetGiveawayListItem = {
 	title: string;
 	type: GiveawayType;
 	locked: boolean;
+	ended: boolean;
 	totalKeys: number;
 	remainingKeys: number;
 	createdAt: Date;
+};
+
+export type GetGiveawayStatus = {
+	type: GiveawayType;
+	ended: boolean;
 };

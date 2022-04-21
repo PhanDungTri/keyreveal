@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Center, Container, createStyles, Text } from "@mantine/core";
+import { createStyles, Text } from "@mantine/core";
 import { NextPage } from "next";
 import Head from "next/head";
 import { Media } from "../components";

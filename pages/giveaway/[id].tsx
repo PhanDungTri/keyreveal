@@ -11,9 +11,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { viewedKeysAtom } from "../../atom";
-import { KeySpoiler, LockedCard, RandomPuller } from "../../features";
-import { PulledRandomKeyList } from "../../features/giveaway/[id]/PulledRandomKeyList";
-import { ShareModal } from "../../features/giveaway/[id]/ShareModal";
+import { KeySpoiler, LockedCard, PulledRandomKeyList, RandomPuller, ShareModal } from "../../features";
 import { useIsMounted } from "../../hooks";
 import { GetGiveaway, GetKey, GetKeyForReveal, GetRandomKey } from "../../models";
 import { getGiveaway } from "../../services";
@@ -50,7 +48,6 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 	const [giveaway, setGiveaway] = useState(ga);
 	const [viewedKeys, setViewedKeys] = useAtom(viewedKeysAtom);
 	const keys = viewedKeys[ga.id] || {};
-	const hasEnded = !giveaway.locked && giveaway.keys.every((key) => key.status !== KeyStatus.Mystic && key.status !== KeyStatus.Spoiled);
 
 	const checkGreedy = () => {
 		if (Object.keys(keys).length >= 2) {
@@ -236,7 +233,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 							</Text>
 						</Group>
 					</Card>
-					{hasEnded && (
+					{giveaway.ended && (
 						<Alert icon={<Icon icon="bxs:error" />} title="This giveaway has ended!" color="red" variant="filled">
 							But you can still view the keys you revealed before.
 						</Alert>
@@ -261,6 +258,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 											name={name}
 											url={url}
 											content={keys[index]?.key}
+											ended={giveaway.ended}
 											onRequestKey={getKey(index)}
 											onReport={updateStatus(index)}
 										/>
@@ -269,7 +267,7 @@ const ViewGiveawayPage: NextPage<Props> = ({ giveaway: ga }) => {
 							</Card>
 						) : (
 							<>
-								<RandomPuller keys={giveaway.keys} onPull={pullKey} onReport={updateStatus} />
+								<RandomPuller ended={giveaway.ended} keys={giveaway.keys} onPull={pullKey} onReport={updateStatus} />
 								<PulledRandomKeyList keys={Object.values(keys).map(({ key }) => key)} />
 							</>
 						))

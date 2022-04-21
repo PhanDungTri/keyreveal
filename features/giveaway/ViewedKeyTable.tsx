@@ -1,5 +1,4 @@
 import { Table, Text } from "@mantine/core";
-import dayjs from "dayjs";
 import { useAtom } from "jotai";
 import { viewedKeysAtom } from "../../atom";
 import { useIsMounted } from "../../hooks";

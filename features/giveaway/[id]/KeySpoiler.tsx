@@ -15,6 +15,7 @@ type Props = {
 	status: KeyStatus;
 	url?: string;
 	content?: string;
+	ended?: boolean;
 	onRequestKey: (captchaToken: string | null) => Promise<void>;
 	onReport: (status: KeyStatus) => Promise<KeyStatus | null>;
 };
@@ -57,12 +58,12 @@ const useStyles = createStyles(({ colors, radius, spacing }) => ({
 	},
 }));
 
-export const KeySpoiler = ({ name, status, url, content: key = "", onRequestKey, onReport }: Props): JSX.Element => {
+export const KeySpoiler = ({ name, status, url, content: key = "", ended, onRequestKey, onReport }: Props): JSX.Element => {
 	const openCaptchaModal = useCaptchaModal();
 	const { classes, cx } = useStyles();
 	const [hidden, setHidden] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const available = status === KeyStatus.Mystic || status === KeyStatus.Spoiled || key !== "";
+	const available = (!ended && (status === KeyStatus.Mystic || status === KeyStatus.Spoiled)) || key !== "";
 	const allowSendFeedback = status === KeyStatus.Mystic || status === KeyStatus.Spoiled;
 
 	const requestKey = async (captchaToken: string | null) => {

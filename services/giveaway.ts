@@ -1,8 +1,8 @@
-import { GiveawayType, KeyStatus } from "@prisma/client";
+import { KeyStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { ItemsPerPage } from "../constants";
 import { uid } from "../libs";
-import { GetGiveaway, GetGiveawayListItem, GetKey, GetRandomKey, NewGiveaway } from "../models";
+import { GetGiveaway, GetGiveawayListItem, GetGiveawayStatus, GetKey, GetRandomKey, NewGiveaway } from "../models";
 import prisma from "../prisma";
 
 export const createGiveaway = async (newGiveaway: NewGiveaway): Promise<string> => {
@@ -38,6 +38,7 @@ export const getGiveaway = async (id: string): Promise<GetGiveaway | null> => {
 			description: true,
 			createdAt: true,
 			public: true,
+			ended: true,
 			password: true,
 			type: true,
 			keys: {
@@ -62,17 +63,6 @@ export const getGiveaway = async (id: string): Promise<GetGiveaway | null> => {
 	}
 
 	return null;
-};
-
-export const getGiveawayType = async (id: string): Promise<GiveawayType | null> => {
-	const giveaway = await prisma.giveaway.findUnique({
-		where: { id },
-		select: {
-			type: true,
-		},
-	});
-
-	return giveaway?.type || null;
 };
 
 export const getKeyForReveal = async (giveawayId: string, index: number): Promise<string | null> => {
@@ -194,6 +184,7 @@ export const getGiveawayList = async (page = 1): Promise<GetGiveawayListItem[]> 
 			createdAt: true,
 			password: true,
 			type: true,
+			ended: true,
 			keys: {
 				select: {
 					status: true,
@@ -202,11 +193,15 @@ export const getGiveawayList = async (page = 1): Promise<GetGiveawayListItem[]> 
 		},
 		where: {
 			public: true,
-			ended: false,
 		},
-		orderBy: {
-			createdAt: "desc",
-		},
+		orderBy: [
+			{
+				ended: "asc",
+			},
+			{
+				createdAt: "desc",
+			},
+		],
 	});
 
 	return giveaways.map(({ password, keys, ...ga }) => ({
@@ -254,4 +249,20 @@ export const getTotalPagesOfGiveaways = async (): Promise<number> => {
 	});
 
 	return Math.ceil(count / ItemsPerPage);
+};
+
+export const getGiveawayStatus = async (giveawayId: string): Promise<GetGiveawayStatus | null> => {
+	if (giveawayId == undefined) return null;
+
+	const giveaway = await prisma.giveaway.findUnique({
+		where: {
+			id: giveawayId,
+		},
+		select: {
+			ended: true,
+			type: true,
+		},
+	});
+
+	return giveaway;
 };

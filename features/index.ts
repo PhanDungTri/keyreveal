@@ -6,3 +6,5 @@ export * from "./giveaway/[id]/RandomPuller";
 export * from "./giveaway/[id]/LockedCard";
 export * from "./giveaway/GiveawayListItem";
 export * from "./giveaway/ViewedKeyTable";
+export * from "./giveaway/[id]/PulledRandomKeyList";
+export * from "./giveaway/[id]/ShareModal";

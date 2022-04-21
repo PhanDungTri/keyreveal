@@ -13,6 +13,7 @@ type Props = {
 	keys: GetKey[];
 	onPull: (captchaToken: string | null) => Promise<GetRandomKey | undefined>;
 	onReport: (index: number) => (status: KeyStatus) => Promise<KeyStatus | null>;
+	ended?: boolean;
 };
 
 const useStyles = createStyles(({ colors, spacing }) => ({
@@ -24,7 +25,7 @@ const useStyles = createStyles(({ colors, spacing }) => ({
 	},
 }));
 
-export const RandomPuller = ({ keys, onPull, onReport }: Props): JSX.Element => {
+export const RandomPuller = ({ keys, onPull, onReport, ended }: Props): JSX.Element => {
 	const openCaptchaModal = useCaptchaModal();
 	const { colors } = useMantineTheme();
 	const { classes } = useStyles();
@@ -101,16 +102,15 @@ export const RandomPuller = ({ keys, onPull, onReport }: Props): JSX.Element => 
 						</Group>
 					</Group>
 					<Center>
-						<Button
-							loading={loading}
-							disabled={unrevealed + spoiled === 0}
-							variant="gradient"
-							gradient={{ from: "pink", to: "yellow" }}
-							size="md"
-							onClick={pullKey}
-						>
-							Pull
-						</Button>
+						{ended || unrevealed + spoiled === 0 ? (
+							<Button size="md" disabled>
+								Pull
+							</Button>
+						) : (
+							<Button loading={loading} variant="gradient" gradient={{ from: "pink", to: "yellow" }} size="md" onClick={pullKey}>
+								Pull
+							</Button>
+						)}
 					</Center>
 				</Stack>
 			</Card>

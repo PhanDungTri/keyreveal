@@ -3,16 +3,7 @@ import { NextApiHandler } from "next";
 import { z, ZodError } from "zod";
 import { HttpMethod } from "../../../../../constants";
 import { BadRequest, BadRequestType } from "../../../../../models";
-import {
-	closeGiveaway,
-	getGiveawayType,
-	getKeyForReveal,
-	getKeyStatus,
-	getRandomKey,
-	shouldCloseGiveaway,
-	updateKeyStatus,
-	verifyCaptcha,
-} from "../../../../../services";
+import { closeGiveaway, getGiveawayStatus, getKeyForReveal, getKeyStatus, shouldCloseGiveaway, updateKeyStatus, verifyCaptcha } from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
@@ -27,9 +18,11 @@ const handler: NextApiHandler = async (req, res) => {
 			try {
 				verifyCaptcha(captchaToken as string);
 
-				const type = await getGiveawayType(giveawayId);
+				const status = await getGiveawayStatus(giveawayId);
 
-				if (type !== GiveawayType.Normal) return res.status(400).json({ message: "Cannot reveal key for this type of giveaway" });
+				if (status === null) return res.status(404).json({ message: "Giveaway not found" });
+				if (status.ended) return res.status(400).json({ message: "Giveaway has ended" });
+				if (status.type !== GiveawayType.Normal) return res.status(400).json({ message: "Cannot reveal key for this type of giveaway" });
 
 				const key = await getKeyForReveal(giveawayId, keyIndex);
 

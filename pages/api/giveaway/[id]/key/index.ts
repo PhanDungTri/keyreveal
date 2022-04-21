@@ -2,7 +2,7 @@ import { GiveawayType, KeyStatus } from "@prisma/client";
 import { NextApiHandler } from "next";
 import { HttpMethod } from "../../../../../constants";
 import { BadRequest } from "../../../../../models";
-import { closeGiveaway, getGiveawayType, getRandomKey, shouldCloseGiveaway, updateKeyStatus, verifyCaptcha } from "../../../../../services";
+import { closeGiveaway, getGiveawayStatus, getRandomKey, shouldCloseGiveaway, updateKeyStatus, verifyCaptcha } from "../../../../../services";
 
 const handler: NextApiHandler = async (req, res) => {
 	const method = req.method;
@@ -16,9 +16,11 @@ const handler: NextApiHandler = async (req, res) => {
 			try {
 				verifyCaptcha(captchaToken as string);
 
-				const type = await getGiveawayType(giveawayId);
+				const status = await getGiveawayStatus(giveawayId);
 
-				if (type !== GiveawayType.Random) return res.status(400).json({ message: "Cannot pull random key for this type of giveaway" });
+				if (status === null) return res.status(404).json({ message: "Giveaway not found" });
+				if (status.ended) return res.status(400).json({ message: "Giveaway has ended" });
+				if (status.type !== GiveawayType.Random) return res.status(400).json({ message: "Cannot pull random key for this type of giveaway" });
 
 				const key = await getRandomKey(giveawayId);
 

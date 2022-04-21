@@ -1,5 +1,4 @@
 import { createStyles, Text } from "@mantine/core";
-import { ElementType } from "react";
 
 type Props = {
 	align?: "center" | "left" | "right";
