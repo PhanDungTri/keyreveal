@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
 			const giveawayId = id as string;
 
 			try {
-				verifyCaptcha(captchaToken as string);
+				await verifyCaptcha(captchaToken as string);
 
 				const status = await getGiveawayStatus(giveawayId);
 

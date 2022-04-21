@@ -12,7 +12,7 @@ const handler: NextApiHandler = async (req, res) => {
 			const { captchaToken, ...newGiveaway }: WithCaptchaToken<NewGiveaway> = req.body;
 
 			try {
-				verifyCaptcha(captchaToken);
+				await verifyCaptcha(captchaToken);
 				NewGiveawaySchema.parse(newGiveaway);
 
 				const id = await createGiveaway(newGiveaway);
