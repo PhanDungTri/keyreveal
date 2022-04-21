@@ -68,6 +68,14 @@ But there are also many people, I call them the ninjas, just sneak in, grab the 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Screenshots
+
+![example create](public/images/guide-create-form.png "KEYREVEAL")
+
+![example giveaway](public/images/example-giveaway.png "KEYREVEAL")
+
+![example random giveaway](public/images/guide-random-giveaway.png "KEYREVEAL")
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
