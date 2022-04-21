@@ -24,17 +24,6 @@ const useStyles = createStyles(({ colors }) => ({
 		lineHeight: 1,
 		height: "32px",
 	},
-	buyMeCoffeeButton: {
-		cursor: "pointer",
-
-		[`&:hover`]: {
-			filter: "brightness(1.15)",
-		},
-
-		[`&:active`]: {
-			transform: "translateY(1px)",
-		},
-	},
 }));
 
 export const Header = (): JSX.Element => {
@@ -73,9 +62,6 @@ export const Header = (): JSX.Element => {
 									<Icon icon="bxl:github" width={32} height={32} />
 								</Tooltip>
 							</a>
-							<a href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
-								<Image className={classes.buyMeCoffeeButton} src="/images/buymeacoffee-button.svg" alt="buy-me-a-coffee-button" height={36} />
-							</a>
 						</Group>
 					</Media>
 					{!hideCreateButton && <CreateGiveawayButton />}
@@ -102,15 +88,6 @@ export const Header = (): JSX.Element => {
 									<Button variant="subtle" leftIcon={<Icon icon="bxl:github" />}>
 										Source code
 									</Button>
-								</a>
-								<a style={{ alignSelf: "center" }} href="https://www.buymeacoffee.com/phandungtri" target="_blank" rel="noreferrer">
-									<Image
-										className={classes.buyMeCoffeeButton}
-										src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg"
-										alt="buy-me-a-coffee-button"
-										width="auto"
-										height={40}
-									/>
 								</a>
 							</Stack>
 						</Drawer>
