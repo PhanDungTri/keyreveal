@@ -13,7 +13,7 @@
 
 ## About The Project
 
-[KEYREVEAL thumbnail](public/images/thumbnail.png "KEYREVEAL")
+![KEYREVEAL thumbnail](public/images/thumbnail.png "KEYREVEAL")
 
 **Everyone :heart: giveaways and so do I :tada:**
 
