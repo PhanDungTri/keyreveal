@@ -60,7 +60,13 @@ But there are also many people, I call them the ninjas, just sneak in, grab the 
 
    - _For [Google ReCAPTCHA](https://www.google.com/recaptcha/admin/create), you have to register your own site key and secret key._
 
-4. Run the application
+4. Initialize database
+   
+   ```sh
+   npx prisma db push
+   ```
+
+5. Run the application
 
    ```sh
    npm run dev
