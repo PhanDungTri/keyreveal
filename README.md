@@ -17,11 +17,12 @@
 
 **Everyone :heart: giveaways and so do I :tada:**
 
-I have taken part in many of them, most of them are on the social media. The host publicly post a bunch of product keys in a Facebook group or subreddit. These giveaways are first come, first served. Some kind people leave the message after claiming the keys so that latecomers will know which key is still available.
+I've joined a lot of them, and most of them are on social media. The host put a bunch of product keys in a Facebook group or subreddit where everyone could see them. First come, first served is how these free things work. Kind people leave the message after taking the keys so that people who arrive later will know which key is still free.
 
-But there are also many people, I call them the ninjas, just sneak in, grab the keys then slip out without saying anything. This makes the latecomers have to try they keys one by one to realize that these keys are already **CLAIMED**. What an evil!
+But there are also a lot of people, whom I call "ninjas," who just sneak in, grab the keys, and leave without saying a word. This means that latecomers have to try each key one at a time to find out that it has already been taken. What a bad thing!
 
-**KEYREVEAL** allow everyone to fully enjoy the fun of the giveaways by providing the way to keep track the statuses of the keys. So that people can know which key is already claimed and which one is still available. Besides, the host can make the giveaway public or private, or protect it with the password. And finally, **KEYREVEAL** is open source.
+
+**KEYREVEAL** makes it easy for everyone to enjoy giveaways to the fullest by keeping track of the status of the keys. So that people can see which keys have already been taken and which ones are still open. Also, the host can choose whether the giveaway is open to the public or not, or they can use a password to protect it. Lastly, **KEYREVEAL** is free to use.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
